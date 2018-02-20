@@ -1,4 +1,4 @@
-CC = clang++
+CC = clang
 
 ifndef $(COMPILE_TYPE)
 	COMPILE_TYPE=debug
@@ -24,7 +24,7 @@ ifeq ($(COMPILE_TYPE), release)
 	GCC_FLAGS = ${GENERAL_FLAGS}
 endif
 
-SUB_OBJECTS = graphics.o
+SUB_OBJECTS = graphics.o resource.o
 OBJECTS = app.o ${SUB_OBJECTS}
 
 all: libapp.a app
@@ -35,11 +35,14 @@ libapp.a: ${OBJECTS}
 app: app.o
 	$(CC) $(GCC_FLAGS) app.o -o app ${INC} ${LIBS}
 
-app.o: app.cpp
-	$(CC) $(GCC_FLAGS) app.cpp -c ${INCS}
+app.o: app.c
+	$(CC) $(GCC_FLAGS) app.c -c ${INCS}
 
-graphics.o: graphics.cpp
-	$(CC) $(GCC_FLAGS) graphics.cpp -c ${INCS}
+graphics.o: graphics.c
+	$(CC) $(GCC_FLAGS) graphics.c -c ${INCS}
+
+resource.o: resource.c
+	$(CC) $(GCC_FLAGS) resource.c -c ${INCS}
 
 clean:
 	rm -f ../lib/libapp.a *.o app

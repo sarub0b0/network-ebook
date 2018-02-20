@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
         return 0;
     }
 
-    al_draw_bitmap(image, 200, 200, 0);
+    al_draw_bitmap(image, 400, 300, 0);
 
     al_flip_display();
     al_rest(2);

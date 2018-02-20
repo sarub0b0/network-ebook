@@ -1,6 +1,11 @@
 #ifndef __MESSAGE_H
 #define __MESSAGE_H
 
+#ifndef NODEBUG
+#define dprintf(fmt,...) printf("%s(%d) %s: " fmt, __FILE__, __LINE__,__func__,__VA_ARGS__)
+#else
+#define dprintf(...)
+#endif
 /////////////////////////////////////////////
 // Control the types of displayed messages
 /////////////////////////////////////////////

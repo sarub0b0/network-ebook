@@ -2,7 +2,13 @@
 #define __MESSAGE_H
 
 #ifndef NODEBUG
-#define dprintf(fmt,...) printf("%s(%d) %s: " fmt, __FILE__, __LINE__,__func__,__VA_ARGS__)
+#define dprintf(message...)                 \
+    do {                                    \
+        fprintf(stderr, "%s", __FILE__);    \
+        fprintf(stderr, "(%d) ", __LINE__); \
+        fprintf(stderr, "%s: ", __func__);  \
+        fprintf(stderr, message);           \
+    } while (0)
 #else
 #define dprintf(...)
 #endif
@@ -20,11 +26,11 @@
 
 // display a warning/error message
 #ifdef MESSAGE_WARNING
-#define WARNING(message...)                                                   \
-    do {                                                                      \
+#define WARNING(message...)                                            \
+    do {                                                               \
         fprintf(stdout, "WARNING: %s, line %d: ", __FILE__, __LINE__); \
-        fprintf(stdout, message);                                             \
-        fprintf(stdout, "\n");                                                \
+        fprintf(stdout, message);                                      \
+        fprintf(stdout, "\n");                                         \
     } while (0)
 #else
 #define WARNING(message...) /* message */
@@ -32,11 +38,11 @@
 
 // display a debugging message
 #ifdef MESSAGE_DEBUG
-#define DEBUG(message...)                                                   \
-    do {                                                                    \
-        fprintf(stdout, "DEBUG: %s, line %d: ", __FILE__, __LINE__); \
-        fprintf(stdout, message);                                           \
-        fprintf(stdout, "\n");                                              \
+#define DEBUG(message...)                                                    \
+    do {                                                                     \
+        fprintf(stdout, "DEBUG: %s(%d) %s: ", __FILE__, __LINE__, __func__); \
+        fprintf(stdout, message);                                            \
+        fprintf(stdout, "\n");                                               \
     } while (0)
 #else
 #define DEBUG(message...) /* message */

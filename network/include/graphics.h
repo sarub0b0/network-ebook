@@ -1,33 +1,27 @@
 #ifndef __GRAPHICS_H
 #define __GRAPHICS_H
 
-#include "allegro5/allegro.h"
-#include "allegro5/allegro_image.h"
+typedef struct ALLEGRO_BITMAP ALLEGRO_BITMAP;
 
-#include "global.h"
+typedef struct bitmap bitmap_t;
+
+extern bitmap_t *router_bmps;
+extern bitmap_t *path_bmps;
+extern bitmap_t *packet_bmps;
+
+extern ALLEGRO_BITMAP *router_al_bmp_ori;
+extern ALLEGRO_BITMAP *path_al_bmp_ori;
+extern ALLEGRO_BITMAP *packet_al_bmp_ori;
+
+extern ALLEGRO_BITMAP **router_al_bmps;
+extern ALLEGRO_BITMAP **path_al_bmps;
+extern ALLEGRO_BITMAP **packet_al_bmps;
+
+extern int SCREEN_W;
+extern int SCREEN_H;
 
 void init();
 void loop();
 void shutdown();
-
-typedef struct point {
-    float x, y;
-} point_t;
-
-struct object {
-    ALLEGRO_BITMAP *bmp;
-    char name[MAX_STRLEN];
-    int index;
-    point_t center;
-    point_t dst;
-    float angle;
-    int w, h;
-    int scale_x, scale_y;
-    int flags;
-};
-
-extern struct object *routers;
-extern struct object *paths;
-extern struct object *packets;
 
 #endif

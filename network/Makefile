@@ -1,6 +1,6 @@
 
 COMPILER  = clang
-CFLAGS    = -g -MMD -MP -Wall -Wextra -Winit-self -Wno-missing-field-initializers
+CFLAGS    = -g -MMD -MP -Wall -Wextra -Winit-self -Wno-missing-field-initializers -std=c11
 ifeq "$(shell getconf LONG_BIT)" "64"
   LDFLAGS = -lm -lallegro -lallegro_main -lallegro_dialog -lallegro_image
 else

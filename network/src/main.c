@@ -5,15 +5,19 @@
 #include <libgen.h>
 
 #include <errno.h>
-#include "message.h"
+
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_native_dialog.h>
 
-#include "global.h"
-#include "graphics.h"
-#include "resource.h"
+#include <global.h>
+#include <message.h>
+#include <graphics.h>
+#include <resource.h>
+
+#include <route.h>
+#include <topology.h>
 
 int errno;
 

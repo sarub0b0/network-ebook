@@ -1,16 +1,33 @@
 #ifndef _BITMAP_H
 #define _BITMAP_H
 
-#include "allegro5/allegro.h"
-#include "allegro5/allegro_image.h"
+#include <global.h>
+#include <point.h>
 
-#include "graphics.h"
+typedef struct ALLEGRO_BITMAP ALLEGRO_BITMAP;
 
-void get_length_between_routers();
+typedef struct bitmap {
+    ALLEGRO_BITMAP *bmp;
+    char name[MAX_STRLEN];
+    int id;
+    point_t center;
+    point_t dst;
+    float angle;
+    int w, h;
+    int scale_x, scale_y;
+    int flags;
+} bitmap_t;
 
-point_t get_point_between_objs_center(point_t *a, point_t *b);
-point_t get_point_obj_center(point_t *dst, int w, int h);
+typedef struct bitmap_option {
+    ALLEGRO_BITMAP *bmp;
+    point_t dst;
+    int w, h;
+}bmp_opt_t;
+
+void init_bitmap();
+
 ALLEGRO_BITMAP *scaled_bitmap(ALLEGRO_BITMAP *original_bmp, int w, int h);
-ALLEGRO_BITMAP *rotated_bitmap(ALLEGRO_BITMAP *original_bmp, float angle);
+int rotated_bitmap(ALLEGRO_BITMAP *original_bmp, float angle, bmp_opt_t *opt);
+
 
 #endif

@@ -1,7 +1,0 @@
-set path+=~/work/allegro/network/include,/usr/local/opt/allegro/include,
-
-let g:neoinclude#paths = {
-    \   'c': '/usr/local/opt/allegro/include',
-    \   'cpp': '/usr/local/opt/allegro/include',
-    \}
-

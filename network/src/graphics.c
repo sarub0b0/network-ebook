@@ -29,8 +29,8 @@ ALLEGRO_BITMAP *path_al_bmp_ori   = NULL;
 ALLEGRO_BITMAP *packet_al_bmp_ori = NULL;
 
 float FPS    = 60.0;
-int SCREEN_W = 640;
-int SCREEN_H = 480;
+int SCREEN_W = 1280;
+int SCREEN_H = 960;
 
 float SPEED = 10;
 float DELTA_TIME;

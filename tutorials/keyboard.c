@@ -101,6 +101,7 @@ int main(int argc, char **argv) {
         } else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
             break;
         } else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+            printf("keycode %d\n", ev.keyboard.keycode);
             switch (ev.keyboard.keycode) {
                 case ALLEGRO_KEY_UP:
                     key[KEY_UP] = true;

@@ -5,7 +5,7 @@
 #include <graphics.h>
 
 #include <bitmap.h>
-#include <point.h>
+include <point.h>
 
 void print_bitmap();
 
@@ -44,7 +44,7 @@ void init_bitmap() {
     base_h = base_w * sin(60 * M_PI / 180.0);
 
     path_w = base_w;
-    path_h = SCREEN_H / 25;
+    path_h = SCREEN_H / 20;
 
     router_w = SCREEN_W / 10;
     router_h = router_w;

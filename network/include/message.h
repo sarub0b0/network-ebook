@@ -1,7 +1,9 @@
 #ifndef __MESSAGE_H
 #define __MESSAGE_H
 
-#ifndef NODEBUG
+#include <stdio.h>
+
+#ifndef DEBUG
 #define dprintf(message...)                 \
     do {                                    \
         fprintf(stderr, "%s", __FILE__);    \

@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdio.h>
 
 #include <global.h>
 #include <message.h>
@@ -19,7 +20,7 @@ topology_t topology;
 
 void init_topology() {
 
-    link_number   = router_number * (router_number - 1) * 2;
+    link_number = router_number * (router_number - 1) * 2;
 
     topology.router_number = router_number;
 
@@ -74,7 +75,7 @@ void create_path() {
             s2 = temp_list[j];
             d2 = temp_list[j + 1];
 
-            printf("list %d --- %d  tmp %d --- %d\n", s1, d1, s2, d2);
+            // dprintf("list %d --- %d  tmp %d --- %d\n", s1, d1, s2, d2);
             if ((s1 == s2 && d1 == d2) || (s1 == d2 && d1 == s2)) {
                 flag = 0;
                 break;
@@ -84,21 +85,21 @@ void create_path() {
 
         if (flag) {
             temp_list[temp_i]     = s1;
-            // temp_list[temp_i + 1] = d1;
+            temp_list[temp_i + 1] = d1;
             temp_i += 2;
             temp_number += 2;
         }
     }
 
-    path_number = temp_number / 2;
-    // for (int i = 0; i < temp_number; i += 2) {
-    //     printf("path %d --- %d\n", temp_list[i], temp_list[i + 1]);
-    // }
+    path_number = link_number / 2;
+    for (int i = 0; i < path_number; i += 2) {
+        dprintf("path %d --- %d\n", temp_list[i], temp_list[i + 1]);
+    }
     topology.path_list = (int *) malloc(sizeof(int) * path_number);
 }
 
 void print_topology(topology_t *t) {
     for (int i = 0; i < link_number; i += 2) {
-        printf("link src:%d   dst:%d\n", t->link_list[i], t->link_list[i + 1]);
+        dprintf("link src:%d   dst:%d\n", t->link_list[i], t->link_list[i + 1]);
     }
 }

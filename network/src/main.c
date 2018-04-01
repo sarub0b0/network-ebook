@@ -1,11 +1,11 @@
 
 #include <stdio.h>
-
+#include <stdlib.h>
+#include <limits.h>
 #include <string.h>
 #include <libgen.h>
 
 #include <errno.h>
-
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>

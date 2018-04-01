@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+.././include/global.hpp
+
+.././include/message.hpp
+cstdio
+-
+
+.././include/window.hpp
+
+/Users/kosay/work/allegro/test/src/main.cpp
+cstdio
+-
+cstdlib
+-
+string
+-
+iostream
+-
+boost/filesystem.hpp
+-
+global.hpp
+-
+message.hpp
+-
+window.hpp
+-
+
+/Users/kosay/work/allegro/test/src/window.cpp
+cstdio
+-
+allegro5/allegro.h
+-
+allegro5/allegro_native_dialog.h
+-
+message.hpp
+-
+window.hpp
+-
+

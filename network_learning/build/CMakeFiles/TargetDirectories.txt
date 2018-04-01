@@ -1,0 +1,3 @@
+/Users/kosay/work/allegro/network_learning/build/CMakeFiles/rebuild_cache.dir
+/Users/kosay/work/allegro/network_learning/build/CMakeFiles/edit_cache.dir
+/Users/kosay/work/allegro/network_learning/build/CMakeFiles/network_learning.dir

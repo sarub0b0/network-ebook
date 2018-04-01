@@ -1,10 +1,14 @@
-#ifndef __GLOBAL_H
-#define __GLOBAL_H
+#ifndef GLOBAL_H
+#define GLOBAL_H
 
 #define ERROR 1
 #define SUCCESS 0
 
 #define MAX_STRLEN 255
+
+// #define __USE_MISC
+
+#include <stdint.h>
 
 #include <allegro5/allegro.h>
 

@@ -3,8 +3,8 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_native_dialog.h>
 
-#include <message.hpp>
-#include <window.hpp>
+#include <message.hh>
+#include <window.hh>
 
 window::window() : display_(nullptr), width_(1280), height_(960) {
 }

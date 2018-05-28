@@ -44,12 +44,12 @@ pkg_check_modules(lib_allegro REQUIRED
 
 set(lib_boost boost_system-mt boost_filesystem-mt)
 
-set(libs ${lib_allegro_LIBRARIES} ${lib_boost} m)
+set(libs ${lib_allegro_LIBRARIES} ${lib_boost} m c)
 
 set(sources_dir src)
 set(headers_dir include)
-file(GLOB sources RELATIVE ${PROJECT_SOURCE_DIR} ${sources_dir}/*.cpp)
-file(GLOB headers RELATIVE ${PROJECT_SOURCE_DIR} ${headers_dir}/*.hpp)
+file(GLOB sources RELATIVE ${PROJECT_SOURCE_DIR} ${sources_dir}/*.cc)
+file(GLOB headers RELATIVE ${PROJECT_SOURCE_DIR} ${headers_dir}/*.hh)
 
 # get_cmake_property(_variableNames VARIABLES)
 # foreach(_variableNames ${_variableNames})

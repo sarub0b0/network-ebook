@@ -1,13 +1,22 @@
 #include <cstdio>
 
-#include <math.h>
+#include <cmath>
 
-#include <point.hpp>
+#include <point.hh>
 
-point &point::operator=(point &p) {
-    return p;
+point::point() : x_(0.0), y_(0.0) {
+}
+point::point(float x, float y) : x_(x), y_(y) {
+}
+point::~point() {
 }
 
+// point &point::operator=(point &p) {
+//     return p;
+// }
+// point point::operator=(point p) {
+//     return p;
+// }
 point point::operator+(point p) {
     return point(x_ + p.x(), y_ + p.y());
 }
@@ -25,13 +34,15 @@ point point::operator/(point p) {
 }
 
 bool point::operator==(point p) {
-    if (x_ == p.x() && y_ == p.y())
+    if (fabs(x_ - p.x()) <= __FLT_EPSILON__ &&
+        fabs(y_ - p.y()) <= __FLT_EPSILON__)
         return true;
     else
         return false;
 }
 bool point::operator!=(point p) {
-    if (x_ != p.x() || y_ != p.y())
+    if (fabs(x_ - p.x()) >= __FLT_EPSILON__ ||
+        fabs(y_ - p.y()) >= __FLT_EPSILON__)
         return true;
     else
         return false;
@@ -51,5 +62,5 @@ double point::distance(float x, float y) {
 }
 
 void point::print() {
-    fprintf(stderr, "x:%.2f y:%.2f\n", x_, y_);
+    printf("x=%.2f y=%.2f\n", x_, y_);
 }

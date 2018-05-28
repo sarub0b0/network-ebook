@@ -1,57 +1,62 @@
+#include <vector>
 #include <string>
+#include <cmath>
 
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_image.h>
 
-#include <global.hpp>
-#include <message.hpp>
-#include <graphics.hpp>
-#include <window.hpp>
-#include <timer.hpp>
-#include <event.hpp>
-#include <text.hpp>
-// #include <routing.hpp>
-// #include <bitmap.hpp>
+#include <global.hh>
+#include <message.hh>
+#include <point.hh>
+#include <graphics.hh>
+#include <window.hh>
+#include <timer.hh>
+#include <event.hh>
+#include <prompt.hh>
+#include <routing.hh>
 
 graphics::graphics()
     : window_(new window()),
       timer_(new timer()),
       event_(new event()),
-      text_(new text()),
-      // routing_(new routing()),
+      prompt_(new prompt()),
+      routing_(new routing()),
       frame_count_(0),
       fps_(60),
       speed_(10),
       done_(false) {
 
-    delta_time_ = 1.0 / fps_;
+    delta_time_ = 1.0f / fps_;
 }
 
 graphics::~graphics() {
 }
 
 void graphics::init(const std::string *resource_path) {
+    if (!al_install_keyboard()) throw "Failed to install keyboard";
+    if (!al_install_mouse()) throw "Failed to install mouse";
+    if (!al_init_image_addon()) throw "Failed to initialize image addon";
+
     try {
         window_->init();
         timer_->init();
-        text_->init(resource_path,
+        event_->init();
+        prompt_->init(resource_path,
                     window_->display_width(),
                     window_->display_height());
-        event_->init();
+        routing_->init(resource_path,
+                       window_->display_width(),
+                       window_->display_height());
     } catch (const char *msg) {
         dprintf("%s", msg);
         throw msg;
     }
-
-    if (!al_install_keyboard()) throw "Failed to install keyboard";
-    if (!al_install_mouse()) throw "Failed to install mouse";
 
     event_->register_event(al_get_keyboard_event_source());
     event_->register_event(al_get_mouse_event_source());
     event_->register_event(window_->get_event_source());
     event_->register_event(timer_->get_event_source());
     dprintf("init done");
-    // text_->init();
-    // routing_->init()
 }
 
 void graphics::loop() {
@@ -82,7 +87,7 @@ void graphics::loop() {
         }
         if (redraw && event_->is_empty()) {
             redraw = false;
-            al_clear_to_color(al_map_rgb(0, 0, 0));
+            al_clear_to_color(al_map_rgb(255, 255, 255));
             update_graphics();
             al_flip_display();
         }
@@ -100,29 +105,27 @@ void graphics::keyboard_input() {
     if (event_->keyboard_unichar() != 0) {
         switch (event_->keyboard_unichar()) {
             case 127: // back space
-                text_->del_text();
+                prompt_->del_char();
                 break;
             case 9:
                 break;
             case 13:
                 break;
-            // case 85:
-            //     break;
             default:
-                text_->add_text(event_->keyboard_unichar());
+                prompt_->add_char(event_->keyboard_unichar());
                 break;
         }
     } else {
         switch (event_->keyboard_keycode()) {
-            case 82: // left key
-                text_->move_left_vertical_line();
+            case ALLEGRO_KEY_LEFT:
+                prompt_->move_left_vertical_line();
                 break;
-            case 83: // right key
-                text_->move_right_vertical_line();
+            case ALLEGRO_KEY_RIGHT:
+                prompt_->move_right_vertical_line();
                 break;
-            case 84: // up key
+            case ALLEGRO_KEY_UP:
                 break;
-            case 85: // down key
+            case ALLEGRO_KEY_DOWN:
                 break;
             default:
                 break;
@@ -135,14 +138,15 @@ void graphics::update_logic() {
     frame_count_++;
 
     if (0 <= frame_count_ && frame_count_ < 60)
-        text_->is_visible(true);
+        prompt_->is_visible(true);
     else if (60 <= frame_count_ && frame_count_ < 120)
-        text_->is_visible(false);
+        prompt_->is_visible(false);
     else
         frame_count_ = 0;
 
     // dprintf("frame_count_ %d", frame_count_);
 }
 void graphics::update_graphics() {
-    text_->draw_textbox();
+    prompt_->draw_prompt();
+    routing_->draw_topology();
 }

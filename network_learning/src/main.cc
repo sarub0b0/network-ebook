@@ -9,10 +9,10 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_native_dialog.h>
 
-#include <global.hpp>
-#include <message.hpp>
+#include <global.hh>
+#include <message.hh>
 
-#include <graphics.hpp>
+#include <graphics.hh>
 
 // namespace fs = std::experimental::filesystem;
 namespace fs = boost::filesystem;

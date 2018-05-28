@@ -1,21 +1,22 @@
 #ifndef GRAPHICS_H_
 #define GRAPHICS_H_
 
+#include <vector>
 #include <string>
 
-typedef class window window;
-typedef class timer timer;
-typedef class event event;
-typedef class text text;
-// typedef class routing routing;
+class window;
+class timer;
+class event;
+class prompt;
+class routing;
 
 class graphics {
    private:
     window *window_;
     timer *timer_;
     event *event_;
-    text *text_;
-    // routing *routing_;
+    prompt *prompt_;
+    routing *routing_;
 
     int frame_count_;
 
@@ -25,6 +26,11 @@ class graphics {
 
     bool done_;
 
+    void mouse_action();
+    void keyboard_input();
+    void update_logic();
+    void update_graphics();
+
    public:
     graphics();
     ~graphics();
@@ -32,10 +38,6 @@ class graphics {
     void init(const std::string *resource_path);
     void loop();
     void shutdown();
-    void keyboard_input();
-    void mouse_action();
-    void update_logic();
-    void update_graphics();
 };
 
 #endif

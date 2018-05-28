@@ -6,13 +6,12 @@ class point {
     float x_, y_;
 
    public:
-    point(float x = 0.0, float y = 0.0) {
-        x_ = x;
-        y_ = y;
-    }
-    ~point(){}
+    point();
+    point(float x, float y);
+    ~point();
 
-    point &operator=(point &p);
+    // point &operator=(point &p);
+    // point operator=(point p);
     // point &operator+=(point &p);
     // point &operator-=(point &p);
     // point &operator*=(point &p);

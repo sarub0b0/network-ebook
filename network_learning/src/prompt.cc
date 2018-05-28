@@ -5,54 +5,51 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_primitives.h>
 
-#include <message.hpp>
-#include <text.hpp>
+#include <message.hh>
 
-text::text()
-    : font_(nullptr),
-      ustr_(nullptr),
-      ustr_pos_(0),
-      vertical_line_x_(0),
-      font_size_(48),
-      is_visible_(false) {
+#include <prompt.hh>
+#include <text.hh>
+
+prompt::prompt() : vertical_line_x_(0), is_visible_(false) {
 }
 
-text::~text() {
+prompt::~prompt() {
 }
 
-void text::init(const std::string *resource_path,
-                int display_w,
-                int display_h) {
+void prompt::init(const std::string *resource_path,
+                  int display_w,
+                  int display_h) {
     if (!al_init_font_addon()) throw "Failed to initialize font addon";
     if (!al_init_ttf_addon()) throw "Failed to initialize ttf addon";
     if (!al_init_primitives_addon()) throw "Failed to initialize primitive";
 
     std::string fpath = *resource_path + "/Ricty-Regular.ttf";
 
-    font_ =
-        al_load_ttf_font(fpath.c_str(), font_size_, ALLEGRO_TTF_MONOCHROME);
+    text_.font_size = 38;
+    text_.font      = al_load_ttf_font(
+        fpath.c_str(), text_.font_size, ALLEGRO_TTF_NO_KERNING);
+    if (text_.font == nullptr) throw "Failed to load ttf font";
 
-    if (font_ == nullptr) throw "Failed to load ttf font";
-
-    ustr_ = al_ustr_new("");
+    text_.ustr     = al_ustr_new("");
+    text_.ustr_pos = 0;
 
     // al_get_ustr_dimensions(
     //     font_, al_ustr_new("A"), &coordinate_x_, &coordinate_y_,
     //     &font_width_, &font_height_);
-    font_height_ = al_get_font_line_height(font_);
-    font_width_  = al_get_text_width(font_, "A");
+    text_.font_height = al_get_font_line_height(text_.font);
+    text_.font_width  = al_get_text_width(text_.font, "A");
 
     dprintf("font x=%d y=%d w=%d h=%d",
             coordinate_x_,
             coordinate_y_,
-            font_width_,
-            font_height_);
+            text_.font_width,
+            text_.font_height);
 
-    vertical_line_x_ = display_w * 0.05;
+    vertical_line_x_ = 20;
     coordinate_x_    = vertical_line_x_;
-    coordinate_y_    = display_h - font_height_ - 20;
+    coordinate_y_    = display_h - text_.font_height - 20;
     text_box_width_  = display_w - vertical_line_x_;
-    text_box_height_ = coordinate_y_ + font_height_;
+    text_box_height_ = coordinate_y_ + text_.font_height;
 
     vertical_line_x_ = coordinate_x_;
 
@@ -62,7 +59,7 @@ void text::init(const std::string *resource_path,
             text_box_width_,
             text_box_height_);
 }
-void text::draw_textbox() {
+void prompt::draw_prompt() {
     al_draw_rounded_rectangle(coordinate_x_ - 2,
                               coordinate_y_ - 2,
                               text_box_width_ + 2,
@@ -81,12 +78,17 @@ void text::draw_textbox() {
                                      al_map_rgb(240, 240, 240));
     draw_vertical_line();
 
-    al_draw_ustr(
-        font_, al_map_rgb(0, 0, 0), coordinate_x_, coordinate_y_, 0, ustr_);
+    al_draw_ustr(text_.font,
+                 al_map_rgb(80, 80, 80),
+                 coordinate_x_,
+                 coordinate_y_,
+                 0,
+                 text_.ustr);
 }
-void text::add_text(int unichar) {
-    if (0 < al_ustr_insert_chr(ustr_, ustr_pos_++, unichar))
-        vertical_line_x_ += font_width_;
+void prompt::add_char(int unichar) {
+    if (al_ustr_length(text_.ustr) < 65 &&
+        0 < al_ustr_insert_chr(text_.ustr, text_.ustr_pos++, unichar))
+        vertical_line_x_ += text_.font_width;
 
     // void al_draw_ustr(const ALLEGRO_FONT *font,
     //                   ALLEGRO_COLOR color,
@@ -96,37 +98,37 @@ void text::add_text(int unichar) {
     //                   const ALLEGRO_USTR *ustr)
 }
 
-void text::del_text() {
-    ustr_pos_--;
-    if (al_ustr_remove_chr(ustr_, ustr_pos_))
-        vertical_line_x_ -= font_width_;
+void prompt::del_char() {
+    text_.ustr_pos--;
+    if (al_ustr_remove_chr(text_.ustr, text_.ustr_pos))
+        vertical_line_x_ -= text_.font_width;
     else
-        ustr_pos_ = 0;
+        text_.ustr_pos = 0;
 }
 
-void text::is_visible(bool is_visible) {
+void prompt::is_visible(bool is_visible) {
     is_visible_ = is_visible;
 }
 
-void text::draw_vertical_line() {
+void prompt::draw_vertical_line() {
     if (is_visible_)
         al_draw_line(vertical_line_x_ + 1,
-                     coordinate_y_ - 1,
+                     coordinate_y_,
                      vertical_line_x_ + 1,
-                     coordinate_y_ + font_height_,
+                     coordinate_y_ + text_.font_height,
                      al_map_rgb(150, 150, 150),
                      3); // command prompt
 }
 
-void text::move_left_vertical_line() {
-    if (0 < ustr_pos_) {
-        ustr_pos_--;
-        vertical_line_x_ -= font_width_;
+void prompt::move_left_vertical_line() {
+    if (0 < text_.ustr_pos) {
+        text_.ustr_pos--;
+        vertical_line_x_ -= text_.font_width;
     }
 }
-void text::move_right_vertical_line() {
-    if (ustr_pos_ < al_ustr_length(ustr_)) {
-        ustr_pos_++;
-        vertical_line_x_ += font_width_;
+void prompt::move_right_vertical_line() {
+    if (text_.ustr_pos < al_ustr_length(text_.ustr)) {
+        text_.ustr_pos++;
+        vertical_line_x_ += text_.font_width;
     }
 }

@@ -1,7 +1,7 @@
 #include <allegro5/allegro.h>
 
-#include <message.hpp>
-#include <event.hpp>
+#include <message.hh>
+#include <event.hh>
 
 event::event() : event_queue_(nullptr), event_(nullptr) {
     // event_ = &event;

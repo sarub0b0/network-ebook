@@ -1,7 +1,7 @@
 #include <allegro5/allegro.h>
 
-#include <message.hpp>
-#include <timer.hpp>
+#include <message.hh>
+#include <timer.hh>
 
 timer::timer() : timer_(nullptr), fps_(60) {
 }

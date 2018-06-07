@@ -5,7 +5,7 @@
 
 #include <text.hh>
 
-class prompt{
+class prompt {
    private:
     text_t text_;
 
@@ -31,6 +31,5 @@ class prompt{
     void move_left_vertical_line();
     void move_right_vertical_line();
 };
-
 
 #endif

@@ -21,6 +21,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O2 -s -DNDEBUG -march=native")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g3 -Og -pg")
 set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os -s -DNDEBUG -march=native")
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ./build)
 
 
 include_directories(./include)
@@ -51,7 +52,7 @@ set(headers_dir include)
 file(GLOB sources RELATIVE ${PROJECT_SOURCE_DIR} ${sources_dir}/*.cc)
 file(GLOB headers RELATIVE ${PROJECT_SOURCE_DIR} ${headers_dir}/*.hh)
 
-# get_cmake_property(_variableNames VARIABLES)
+# get_cmake_property(_variableNames VARIABLES):w
 # foreach(_variableNames ${_variableNames})
 #     message(STATUS "${_variableNames}=${${_variableNames}}")
 # endforeach(_variableNames)
@@ -60,4 +61,3 @@ file(GLOB headers RELATIVE ${PROJECT_SOURCE_DIR} ${headers_dir}/*.hh)
 add_executable(${PROJECT_NAME} ${sources})
 target_include_directories(${PROJECT_NAME} PRIVATE ./include)
 target_link_libraries(${PROJECT_NAME} ${libs})
-

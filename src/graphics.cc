@@ -42,8 +42,8 @@ void graphics::init(const std::string *resource_path) {
         timer_->init();
         event_->init();
         prompt_->init(resource_path,
-                    window_->display_width(),
-                    window_->display_height());
+                      window_->display_width(),
+                      window_->display_height());
         routing_->init(resource_path,
                        window_->display_width(),
                        window_->display_height());

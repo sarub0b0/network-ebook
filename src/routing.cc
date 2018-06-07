@@ -378,7 +378,7 @@ void routing::draw_node() {
 void routing::draw_name() {
     ALLEGRO_USTR *name;
     ALLEGRO_USTR *address;
-    ALLEGRO_USTR *netmast;
+    ALLEGRO_USTR *netmask;
 
     for (auto x : routers_) {
         name = al_ustr_new(x->name.c_str());

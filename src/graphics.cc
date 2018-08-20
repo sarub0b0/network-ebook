@@ -7,8 +7,8 @@
 
 #include <global.hh>
 #include <message.hh>
-#include <point.hh>
 #include <graphics.hh>
+#include <point.hh>
 #include <window.hh>
 #include <timer.hh>
 #include <event.hh>
@@ -22,8 +22,8 @@ graphics::graphics()
       prompt_(new prompt()),
       routing_(new routing()),
       frame_count_(0),
-      fps_(60),
-      speed_(10),
+      fps_(120),
+      speed_(50),
       done_(false) {
 
     delta_time_ = 1.0f / fps_;
@@ -39,7 +39,7 @@ void graphics::init(const std::string *resource_path) {
 
     try {
         window_->init();
-        timer_->init();
+        timer_->init(fps_);
         event_->init();
         prompt_->init(resource_path,
                       window_->display_width(),
@@ -97,8 +97,8 @@ void graphics::loop() {
 void graphics::shutdown() {
 }
 void graphics::keyboard_input() {
-    dprintf("unichar %d", event_->keyboard_unichar());
-    dprintf("keycode %d", event_->keyboard_keycode());
+    // dprintf("unichar %d", event_->keyboard_unichar());
+    // dprintf("keycode %d", event_->keyboard_keycode());
 
     if (event_->keyboard_unichar() == 27) done_ = true;
 
@@ -124,6 +124,7 @@ void graphics::keyboard_input() {
                 prompt_->move_right_vertical_line();
                 break;
             case ALLEGRO_KEY_UP:
+                routing_->add_packet();
                 break;
             case ALLEGRO_KEY_DOWN:
                 break;
@@ -135,11 +136,12 @@ void graphics::keyboard_input() {
 void graphics::mouse_action() {
 }
 void graphics::update_logic() {
+
     frame_count_++;
 
-    if (0 <= frame_count_ && frame_count_ < 60)
+    if (0 <= frame_count_ && frame_count_ < fps_)
         prompt_->is_visible(true);
-    else if (60 <= frame_count_ && frame_count_ < 120)
+    else if (fps_ <= frame_count_ && frame_count_ < fps_ * 2)
         prompt_->is_visible(false);
     else
         frame_count_ = 0;
@@ -148,5 +150,6 @@ void graphics::update_logic() {
 }
 void graphics::update_graphics() {
     prompt_->draw_prompt();
+    routing_->move_packet(speed_ * delta_time_);
     routing_->draw_topology();
 }

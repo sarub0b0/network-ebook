@@ -10,6 +10,7 @@
 #include <prompt.hh>
 #include <text.hh>
 
+#define INT(x) static_cast<int>(x)
 prompt::prompt() : vertical_line_x_(0), is_visible_(false) {
 }
 
@@ -25,7 +26,7 @@ void prompt::init(const std::string *resource_path,
 
     std::string fpath = *resource_path + "/Ricty-Regular.ttf";
 
-    text_.font_size = 38;
+    text_.font_size = 28;
     text_.font      = al_load_ttf_font(
         fpath.c_str(), text_.font_size, ALLEGRO_TTF_NO_KERNING);
     if (text_.font == nullptr) throw "Failed to load ttf font";
@@ -38,12 +39,6 @@ void prompt::init(const std::string *resource_path,
     //     &font_width_, &font_height_);
     text_.font_height = al_get_font_line_height(text_.font);
     text_.font_width  = al_get_text_width(text_.font, "A");
-
-    dprintf("font x=%d y=%d w=%d h=%d",
-            coordinate_x_,
-            coordinate_y_,
-            text_.font_width,
-            text_.font_height);
 
     vertical_line_x_ = 20;
     coordinate_x_    = vertical_line_x_;
@@ -127,7 +122,7 @@ void prompt::move_left_vertical_line() {
     }
 }
 void prompt::move_right_vertical_line() {
-    if (text_.ustr_pos < al_ustr_length(text_.ustr)) {
+    if (text_.ustr_pos < INT(al_ustr_length(text_.ustr))) {
         text_.ustr_pos++;
         vertical_line_x_ += text_.font_width;
     }

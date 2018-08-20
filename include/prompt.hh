@@ -13,7 +13,7 @@ class prompt {
 
     int coordinate_x_;
     int coordinate_y_;
-    int coordinate_offset_x_;
+    // int coordinate_offset_x_;
     int text_box_width_;
     int text_box_height_;
 

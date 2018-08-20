@@ -53,12 +53,16 @@ void point::move(point p) {
     y_ += p.y();
 }
 
-double point::distance(point p) {
+float point::distance(point p) {
     return sqrt(pow(x_ - p.x(), 2) + pow(y_ - p.y(), 2));
 }
 
-double point::distance(float x, float y) {
+float point::distance(float x, float y) {
     return sqrt(pow(x_ + x, 2) + pow(y_ - y, 2));
+}
+
+float point::magnitude() {
+    return   sqrt(pow(x_, 2) + pow(y_, 2));
 }
 
 void point::print() {

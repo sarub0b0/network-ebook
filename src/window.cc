@@ -6,7 +6,7 @@
 #include <message.hh>
 #include <window.hh>
 
-window::window() : display_(nullptr), width_(1280), height_(960) {
+window::window() : display_(nullptr), width_(1650), height_(1050) {
 }
 
 window::window(int w, int h) : display_(nullptr), width_(w), height_(h) {
@@ -34,19 +34,21 @@ void window::init() {
                                    ALLEGRO_MESSAGEBOX_ERROR);
         throw "failed to create display!\n";
     }
-
 }
 
 ALLEGRO_EVENT_SOURCE *window::get_event_source() {
     return al_get_display_event_source(display_);
 }
 
-int window::display_width(){
+int window::display_width() {
     return al_get_display_width(display_);
 }
-int window::display_height(){
+int window::display_height() {
     return al_get_display_height(display_);
 }
 void window::print() {
-    std::printf("width:%d height:%d display:%p\n", width_, height_, display_);
+    std::printf("width:%d height:%d display:%p\n",
+                width_,
+                height_,
+                static_cast<void *>(display_));
 }

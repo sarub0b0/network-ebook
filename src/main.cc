@@ -4,7 +4,6 @@
 #include <iostream>
 
 #include <boost/filesystem.hpp>
-// #include <experimental/filesystem>
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_native_dialog.h>

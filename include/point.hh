@@ -34,8 +34,9 @@ class point {
 
     void move(point p);
 
-    double distance(point p);
-    double distance(float x, float y);
+    float distance(point p);
+    float distance(float x, float y);
+    float magnitude();
 
     void print();
 };

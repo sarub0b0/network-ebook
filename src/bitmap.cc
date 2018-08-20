@@ -2,7 +2,10 @@
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
+#include <math.h>
+#include <float.h>
 
+#include <global.hh>
 #include <message.hh>
 #include <point.hh>
 #include <bitmap.hh>
@@ -11,9 +14,9 @@ bitmap::bitmap()
     : bitmap_(nullptr),
       name_(""),
       id_(-1),
-      object_center_(point()),
-      object_dst_(point()),
-      actual_dst_(point()),
+      object_center_(point(0, 0)),
+      object_dst_(point(0, 0)),
+      actual_dst_(point(0, 0)),
       angle_(0.0),
       width_(0),
       height_(0),
@@ -44,11 +47,17 @@ void bitmap::load(const std::string *resource_path) {
     if ((bitmap_ = al_load_bitmap(resource_path->c_str())) == NULL)
         throw "Failed to load image";
 
+    if ((original_bitmap_ = al_load_bitmap(resource_path->c_str())) == NULL)
+        throw "Failed to load image";
+
     width_  = al_get_bitmap_width(bitmap_);
     height_ = al_get_bitmap_height(bitmap_);
-    point c(width_ / 2.0f, height_ / 2.0f);
-    object_center_ = c;
-    actual_dst_    = object_dst_ - object_center_;
+
+    original_width_  = width_;
+    original_height_ = height_;
+
+    point center(width_ / 2.0f, height_ / 2.0f);
+    object_center_ = center;
 }
 
 void bitmap::move(point dst) {
@@ -60,106 +69,91 @@ void bitmap::resize(int dst_w, int dst_h) {
     ALLEGRO_BITMAP *temp;
     if ((temp = scaled_bitmap(bitmap_, dst_w, dst_h)) == nullptr)
         throw "Failed to scaled bitmap";
+    if (bitmap_ != nullptr) {
+        al_destroy_bitmap(bitmap_);
+    }
+    bitmap_ = temp;
+
+    if ((temp = scaled_bitmap(original_bitmap_, dst_w, dst_h)) == nullptr)
+        throw "Failed to scaled bitmap";
+    if (original_bitmap_ != nullptr) {
+        al_destroy_bitmap(original_bitmap_);
+    }
+    original_bitmap_ = temp;
+
+    width_  = al_get_bitmap_width(bitmap_);
+    height_ = al_get_bitmap_height(bitmap_);
+
+    original_width_  = width_;
+    original_height_ = height_;
+
+    point center(width_ / 2.0f, height_ / 2.0f);
+    object_center_ = center;
+}
+
+void bitmap::rotate(float angle) {
+    ALLEGRO_BITMAP *temp;
+    if ((temp = rotated_bitmap(original_bitmap_, angle)) == nullptr)
+        throw "Failed to rotate bitmap";
+    if (bitmap_ != nullptr) {
+        al_destroy_bitmap(bitmap_);
+    }
     bitmap_ = temp;
 
     width_  = al_get_bitmap_width(bitmap_);
     height_ = al_get_bitmap_height(bitmap_);
 
-    point c(width_ / 2.0f, height_ / 2.0f);
-    object_center_ = c;
-    object_dst_    = object_dst_ - object_center_;
+    point center(width_ / 2.0f, height_ / 2.0f);
+    object_center_ = center;
 }
 
-void bitmap::rotate(float angle) {
-    ALLEGRO_BITMAP *temp;
-    if ((temp = rotated_bitmap()) == nullptr) throw "Failed to scaled bitmap";
-    bitmap_ = temp;
-}
+ALLEGRO_BITMAP *bitmap::rotated_bitmap(ALLEGRO_BITMAP *original_bmp,
+                                       float angle) {
+    ALLEGRO_BITMAP *rotated_bmp, *prev_target;
 
-ALLEGRO_BITMAP *bitmap::rotated_bitmap() {
-    return nullptr;
-    // ALLEGRO_BITMAP *rotated_bmp, *prev_target;
+    // 1. create atemporary bitmap of size we want
+    int w, h;
 
-    // // 1. create atemporary bitmap of size we want
-    // int w, h;
+    w = original_width_;
+    h = original_height_;
 
-    // w = al_get_bitmap_width(original_bmp);
-    // h = al_get_bitmap_height(original_bmp);
+    angle_ += angle;
 
-    // double rad;
-    // double s, c;
+    if (angle_ < 0) {
+        angle_ += 360;
+    }
 
-    // if (angle < 0) {
-    //     angle += 360;
-    // }
+    if (360 < angle_) {
+        angle_ -= 360;
+    }
 
-    // rad = angle * M_PI / 180.0;
+    rotated_bmp = al_create_bitmap(original_width_, original_width_);
+    if (!rotated_bmp) return nullptr;
 
-    // s = fabs(sin(rad));
-    // c = fabs(cos(rad));
+    // 2. load the bitmap at the original size
+    // 3. set the target bitmap top the rotated bitmap
+    float cx, cy, dx, dy;
+    prev_target = al_get_target_bitmap();
+    al_set_target_bitmap(rotated_bmp);
+    al_clear_to_color(al_map_rgba(0, 0, 0, 0));
 
-    // int r_w, r_h;
-    // r_w = ceil((w * c) + (h * s));
-    // r_h = ceil((w * s) + (h * c));
+    cx = original_width_ / 2;
+    cy = original_height_ / 2;
 
-    // // dprintf("rotated_bmp w:%d h:%d\n", r_w, r_h);
+    dx = original_width_ / 2;
+    dy = original_width_ / 2;
 
-    // rotated_bmp = al_create_bitmap(r_w, r_h);
-    // // rotated_bmp = al_create_bitmap(600, 400);
-    // if (!rotated_bmp) return ERROR;
+    // 4. copy the loaded bitmap to the rotated bitmap
+    al_draw_rotated_bitmap(
+        original_bmp, cx, cy, dx, dy, FLOAT(angle_ * ALLEGRO_PI / 180.0), 0);
 
-    // // 2. load the bitmap at the original size
-    // // if (!original_bmp) abort_game("Failed to load path.png");
+    // 5. restore the previous target and clean up
+    al_set_target_bitmap(prev_target);
 
-    // float dx, dy;
-    // dx = h * s / 2;
-    // dy = h * c / 2;
+    width_  = al_get_bitmap_width(bitmap_);
+    height_ = al_get_bitmap_height(bitmap_);
 
-    // if (90 < angle && angle <= 180) {
-    //     dx += w * c;
-    // } else if (180 < angle && angle <= 270) {
-    //     dx += w * c;
-    //     dy += w * s;
-    // } else if (270 < angle && angle < 360) {
-    //     dy += w * s;
-    // }
-
-    // // dprintf("rotated_bmp w:%d h:%d\n",
-    // //         al_get_bitmap_width(rotated_bmp),
-    // //         al_get_bitmap_height(rotated_bmp));
-
-    // // 3. set the target bitmap top the rotated bitmap
-    // prev_target = al_get_target_bitmap();
-    // al_set_target_bitmap(rotated_bmp);
-    // al_clear_to_color(al_map_rgba(0, 0, 0, 0));
-    // // al_clear_to_color(al_map_rgba(255, 255, 255, 0));
-    // // al_draw_bitmap(rotated_bmp, 300, 0, 0);
-
-    // // dprintf("rotated_bmp dx:%f dy:%f\n", dx, dy);
-
-    // // 4. copy the loaded bitmap to the rotated bitmap
-
-    // // al_draw_rotated_bitmap(original_bmp, c.x, c.y, c.x, c.y, angle, 0);
-    // al_draw_rotated_bitmap(original_bmp, 0, h / 2, dx, dy, rad, 0);
-
-    // // al_draw_rotated_bitmap(original_bmp,
-    // //                        (SCREEN_W / 2.0),
-    // //                        (SCREEN_H / 2.0),
-    // //                        dx,
-    // //                        dy,
-    // //                        (angle * M_PI / 180.0),
-    // //                        0);
-
-    // // 5. restore the previous target and clean up
-    // al_set_target_bitmap(prev_target);
-
-    // opt->bmp   = rotated_bmp;
-    // opt->dst.x = dx;
-    // opt->dst.y = dy;
-    // opt->w     = r_w;
-    // opt->h     = r_h;
-
-    // return SUCCESS;
+    return rotated_bmp;
 }
 
 ALLEGRO_BITMAP *bitmap::scaled_bitmap(ALLEGRO_BITMAP *original_bmp,
@@ -217,10 +211,22 @@ point bitmap::object_destination() {
     return object_dst_;
 }
 
+point bitmap::actual_destination() {
+    return actual_dst_;
+}
+
+point bitmap::object_center() {
+    return object_center_;
+}
 int bitmap::id() {
     return id_;
 }
 
 point bitmap::upper_right_point() {
     return actual_dst_ + point(width_, 0);
+}
+
+void bitmap::destroy() {
+    al_destroy_bitmap(bitmap_);
+    al_destroy_bitmap(original_bitmap_);
 }

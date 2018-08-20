@@ -13,7 +13,7 @@ class timer {
     timer();
     ~timer();
 
-    void init();
+    void init(int fps);
     ALLEGRO_EVENT_SOURCE *get_event_source();
     void start_timer();
 };
